@@ -17,6 +17,9 @@ import androidx.compose.ui.unit.dp
 import com.example.taskapp.data.database.TaskDatabase
 import com.example.taskapp.data.model.Task
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,6 +127,16 @@ fun TarjetaTarea(
                     },
                     style = MaterialTheme.typography.labelSmall
                 )
+                if (task.dueDate != null) {
+                    val fecha = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(task.dueDate))
+                    val vencida = task.dueDate < System.currentTimeMillis() && !task.isCompleted
+                    Text(
+                        text = if (vencida) "⚠️ Venció: $fecha" else "📅 $fecha ${task.dueTime}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (vencida) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
             IconButton(onClick = onDelete) {
                 Icon(

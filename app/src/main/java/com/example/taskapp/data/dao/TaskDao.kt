@@ -24,4 +24,11 @@ interface TaskDao {
 
     @Query("SELECT * FROM tasks WHERE isCompleted = 1 ORDER BY createdAt DESC")
     fun getCompletedTasks(): Flow<List<Task>>
+
+    @Query("SELECT * FROM tasks WHERE dueDate IS NOT NULL AND dueDate <= :today AND isCompleted = 0 ORDER BY dueDate ASC")
+    fun getOverdueTasks(today: Long): Flow<List<Task>>
+
+    @Query("SELECT * FROM tasks WHERE isCompleted = 0 ORDER BY dueDate ASC NULLS LAST")
+    fun getTasksSortedByDueDate(): Flow<List<Task>>
+
 }
